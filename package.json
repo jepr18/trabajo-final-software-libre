@@ -1,5 +1,5 @@
 {
-  "name": "${PROJECT_NAME}",
+  "name": "trabajo-final-software-libre",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,6 +10,6 @@
   },
   "devDependencies": {
     "prettier": "^3.3.1",
-    "vite": "^5.1.6"
+    "vite": "^7.1.9"
   }
 }
