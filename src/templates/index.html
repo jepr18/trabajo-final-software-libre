@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UAPA Smartphones</title>
+    <link rel="stylesheet" href="../../public/style.css">
+    <link rel="script" href="../main.js">
+</head>
+<body>
+<header>
+    <section class="titulo">
+        <h1>UAPA Smartphones</h1>
+    </section>
+</header>
+<main>
+    <section class="subtitulo">
+        <h2>Administración de datos</h2>
+    </section>
+    <section class="crear">
+        <div class="crear-titulo">Inserción de datos</div>
+        <div class="crear-seleccion">
+            <label for="crear-opciones">Seleccione la categoría deseada:</label>
+            <select name="crear-opciones" id="crear-opciones">
+                <option value="productos">Productos</option>
+                <option value="clientes">Clientes</option>
+                <option value="ventas">Ventas</option>
+                <option value="detalle-ventas">Detalle de ventas</option>
+            </select>
+        </div>
+        <div class="crear-datos">
+            <form action="" method="get" class="form-crear-productos">
+                <div class="form-crear-productos">
+                    <label for="modelo">Modelo: </label>
+                    <input type="text" name="modelo" id="modelo" required />
+                </div>
+                <div class="form-crear-productos">
+                    <label for="marca">Marca: </label>
+                    <input type="text" name="marca" id="marca" required />
+                </div>
+                <div class="form-crear-productos">
+                    <label for="costo">Costo: </label>
+                    <input type="number" name="costo" id="costo" required />
+                </div>
+                <div class="form-crear-productos">
+                    <label for="precio">Precio: </label>
+                    <input type="number" name="precio" id="precio" required />
+                </div>
+                <div class="form-crear-productos">
+                    <label for="cantidad-stock">Cantidad en stock: </label>
+                    <input type="number" name="cantidad-stock" id="cantidad-stock" />
+                </div>
+                <div class="form-crear-productos">
+                    <label for="fecha-disponible">Fecha disponible: </label>
+                    <input type="date" name="fecha-disponible" id="fecha-disponible" />
+                </div>
+                <div class="form-crear-productos">
+                    <input type="submit" value="Insertar nuevo producto" />
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+</html>
