@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>UAPA Smartphones</title>
     <link rel="stylesheet" href="../../public/style.css">
-    <link rel="script" href="../main.js">
+    <script src="../main.js"></script>
 </head>
 <body>
 <header>
@@ -14,51 +14,182 @@
     </section>
 </header>
 <main>
-    <section class="subtitulo">
-        <h2>Administración de datos</h2>
-    </section>
-    <section class="crear">
-        <div class="crear-titulo">Inserción de datos</div>
-        <div class="crear-seleccion">
-            <label for="crear-opciones">Seleccione la categoría deseada:</label>
-            <select name="crear-opciones" id="crear-opciones">
+    <section class="busqueda-datos">
+        <section class="subtitulo">
+            <h2>Búsqueda de datos</h2>
+        </section>
+        <div class="buscar-seleccion">
+            <label for="buscar-opciones">Seleccione la categoría deseada:</label>
+            <select name="buscar-opciones" id="buscar-opciones">
+                <option value="placeholder">-</option>
                 <option value="productos">Productos</option>
                 <option value="clientes">Clientes</option>
                 <option value="ventas">Ventas</option>
-                <option value="detalle-ventas">Detalle de ventas</option>
             </select>
         </div>
-        <div class="crear-datos">
-            <form action="" method="get" class="form-crear-productos">
-                <div class="form-crear-productos">
-                    <label for="modelo">Modelo: </label>
-                    <input type="text" name="modelo" id="modelo" required />
-                </div>
-                <div class="form-crear-productos">
-                    <label for="marca">Marca: </label>
-                    <input type="text" name="marca" id="marca" required />
-                </div>
-                <div class="form-crear-productos">
-                    <label for="costo">Costo: </label>
-                    <input type="number" name="costo" id="costo" required />
-                </div>
-                <div class="form-crear-productos">
-                    <label for="precio">Precio: </label>
-                    <input type="number" name="precio" id="precio" required />
-                </div>
-                <div class="form-crear-productos">
-                    <label for="cantidad-stock">Cantidad en stock: </label>
-                    <input type="number" name="cantidad-stock" id="cantidad-stock" />
-                </div>
-                <div class="form-crear-productos">
-                    <label for="fecha-disponible">Fecha disponible: </label>
-                    <input type="date" name="fecha-disponible" id="fecha-disponible" />
-                </div>
-                <div class="form-crear-productos">
-                    <input type="submit" value="Insertar nuevo producto" />
-                </div>
-            </form>
+        <div class="buscar-barra">
+            <search>
+                <form action="">
+                    <label for="buscar-barra">Término a buscar</label>
+                    <input type="search" id="buscar-barra" name="buscar-barra" />
+                    <button type="submit">Buscar</button>
+                </form>
+            </search>
         </div>
+    </section>
+
+    <section class="administracion-datos">
+        <section class="subtitulo">
+            <h2>Administración de datos</h2>
+        </section>
+        <section class="crear">
+            <div class="crear-titulo">Inserción de datos</div>
+            <div class="crear-seleccion">
+                <label for="crear-opciones">Seleccione la categoría deseada:</label>
+                <select name="crear-opciones" id="crear-opciones">
+                    <option value="placeholder">-</option>
+                    <option value="productos">Productos</option>
+                    <option value="clientes">Clientes</option>
+                    <option value="ventas">Ventas</option>
+                </select>
+            </div>
+            <div class="crear-datos">
+                <form action="" method="get" class="form-crear-productos">
+                    <div class="form-crear-productos">
+                        <label for="modelo">Modelo: </label>
+                        <input type="text" name="modelo" id="modelo" required />
+                    </div>
+                    <div class="form-crear-productos">
+                        <label for="marca">Marca: </label>
+                        <input type="text" name="marca" id="marca" required />
+                    </div>
+                    <div class="form-crear-productos">
+                        <label for="costo">Costo: </label>
+                        <input type="number" name="costo" id="costo" required />
+                    </div>
+                    <div class="form-crear-productos">
+                        <label for="precio">Precio: </label>
+                        <input type="number" name="precio" id="precio" required />
+                    </div>
+                    <div class="form-crear-productos">
+                        <label for="cantidad-stock">Cantidad en stock: </label>
+                        <input type="number" name="cantidad-stock" id="cantidad-stock" />
+                    </div>
+                    <div class="form-crear-productos">
+                        <label for="fecha-disponible">Fecha disponible: </label>
+                        <input type="date" name="fecha-disponible" id="fecha-disponible" />
+                    </div>
+                    <div class="form-crear-productos">
+                        <input type="submit" value="Insertar nuevo producto" />
+                    </div>
+                </form>
+
+                <form action="" method="get" class="form-crear-clientes">
+                    <div class="form-crear-clientes">
+                        <label for="nombre-cliente">Nombre: </label>
+                        <input type="text" name="nombre-cliente" id="nombre-cliente" required />
+                    </div>
+                    <div class="form-crear-clientes">
+                        <label for="apellido-cliente">Apellido: </label>
+                        <input type="text" name="apellido-cliente" id="apellido-cliente" required />
+                    </div>
+                    <div class="form-crear-clientes">
+                        <label for="correo-cliente">Correo electrónico: </label>
+                        <input type="email" name="correo-cliente" id="correo-cliente" required />
+                    </div>
+                    <div class="form-crear-clientes">
+                        <label for="telefono-cliente">Teléfono: </label>
+                        <input type="number" name="telefono-cliente" id="telefono-cliente" required />
+                    </div>
+                    <div class="form-crear-clientes">
+                        <input type="submit" value="Insertar nuevo cliente" />
+                    </div>
+                </form>
+
+                <form action="" method="get" class="form-crear-ventas">
+                    <div class="form-crear-ventas">
+                        <label for="id-cliente-venta">ID Cliente: </label>
+                        <input type="number" name="id-cliente-venta" id="id-cliente-venta" required />
+                    </div>
+                    <div class="form-crear-ventas">
+                        <label for="fecha-venta">Fecha Venta: </label>
+                        <input type="date" name="fecha-venta" id="fecha-venta" required />
+                    </div>
+                    <div class="form-crear-ventas">
+                        <label for="total-venta">Total Venta: </label>
+                        <input type="number" name="total-venta" id="total-venta" required />
+                    </div>
+                    <div class="form-crear-ventas">
+                        <label for="id-producto">ID Producto: </label>
+                        <input type="number" name="id-producto" id="id-producto" required />
+                    </div>
+                    <div class="form-crear-ventas">
+                        <label for="cantidad-venta">Cantidad: </label>
+                        <input type="number" name="cantidad-venta" id="cantidad-venta" required />
+                    </div>
+                    <div class="form-crear-ventas">
+                        <label for="precio-unidad-venta">Precio Unidad: </label>
+                        <input type="number" name="precio-unidad-venta" id="precio-unidad-venta" required />
+                    </div>
+                    <div class="form-crear-clientes">
+                        <input type="submit" value="Insertar nueva venta" />
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="modificar">
+            <div class="modificar-titulo">Modificación de datos</div>
+            <div class="modificar-seleccion">
+                <label for="modificar-opciones">Seleccione la categoría deseada:</label>
+                <select name="modificar-opciones" id="modificar-opciones">
+                    <option value="placeholder">-</option>
+                    <option value="productos">Productos</option>
+                    <option value="clientes">Clientes</option>
+                    <option value="ventas">Ventas</option>
+                    <option value="detalle-ventas">Detalle de ventas</option>
+                </select>
+            </div>
+            <div class="modificar-sub-seleccion">
+                <label for="modificar-sub-opciones">Seleccione el dato a ser modificado:</label>
+                <select name="modificar-sub-opciones" id="modificar-sub-opciones">
+                </select>
+            </div>
+            <div class="form-modificar">
+                <form action="" method="get" class="form-modificar">
+                    <div class="form-modificar">
+                        <label for="form-modificar">Nuevo valor: </label>
+                        <input type="text" name="form-modificar" id="form-modificar" required />
+                    </div>
+                    <div class="form-modificar">
+                        <input type="submit" value="Modificar valores" />
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="eliminar">
+            <div class="eliminar-titulo">Eliminación de datos</div>
+            <div class="eliminar-seleccion">
+                <label for="eliminar-opciones">Seleccione la categoría deseada:</label>
+                <select name="eliminar-opciones" id="eliminar-opciones">
+                    <option value="productos">Productos</option>
+                    <option value="clientes">Clientes</option>
+                    <option value="ventas">Ventas</option>
+                </select>
+            </div>
+            <div class="form-eliminar">
+                <form action="" method="get" class="form-eliminar">
+                    <div class="form-eliminar">
+                        <label for="form-eliminar">ID del valor a eliminar: </label>
+                        <input type="number" name="form-eliminar" id="form-eliminar" required />
+                    </div>
+                    <div class="form-eliminar">
+                        <input type="submit" value="Eliminar valor" />
+                    </div>
+                </form>
+            </div>
+        </section>
     </section>
 </main>
 </body>

@@ -2,3 +2,247 @@
     font-size: 14pt;
     font-family: Avenir, Helvetica, Arial, sans-serif;
 }
+
+/*Header Element*/
+header .titulo {
+    text-align: center;
+    padding: 2rem;
+    background-color: #004ab4;
+}
+
+header .titulo h1 {
+    font-size: 3rem;
+    color: white;
+}
+
+/*Main Element*/
+
+main {
+    display: flex;
+    flex-direction: column;
+}
+
+/*Main - Búsqueda de datos*/
+
+main .busqueda-datos {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    margin: 1rem;
+    padding-bottom: 1rem;
+    border: 5px solid #004ab4;
+}
+
+main .busqueda-datos .subtitulo {
+    padding: 0.5rem;
+}
+
+main .busqueda-datos .subtitulo h2 {
+    font-size: 2rem;
+}
+
+main .busqueda-datos .buscar-seleccion {
+    margin-bottom: 1rem;
+}
+
+main .busqueda-datos .buscar-seleccion select {
+    border-radius: .2rem;
+    border: solid .2rem #004ab4;
+    background-color: transparent;
+    padding: .2rem 1rem;
+    text-align: center;
+}
+
+main .busqueda-datos .buscar-seleccion select:focus {
+    border: solid .3rem #004ab4;
+    font-weight: bold;
+}
+
+main .busqueda-datos .buscar-seleccion select:hover {
+    cursor: pointer;
+}
+
+main .busqueda-datos .buscar-barra search input {
+    border-radius: .2rem;
+    border: solid .2rem #004ab4;
+    background-color: transparent;
+    padding: .2rem 1rem .2rem .1rem;
+}
+
+main .busqueda-datos .buscar-barra search input:focus {
+    border: solid .3rem #004ab4;
+}
+
+main .busqueda-datos .buscar-barra search button {
+    border-radius: .2rem;
+    border: solid .2rem #004ab4;
+    background-color: #004ab4;
+    color: white;
+    padding: .3rem .5rem;
+}
+
+main .busqueda-datos .buscar-barra search button:hover {
+    border: solid .2rem #012163;
+    background-color: #012163;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/*Main: Administración de datos*/
+
+main .administracion-datos {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    margin: 1rem;
+    padding-bottom: 1rem;
+    border: 5px solid #004ab4;
+}
+
+main .administracion-datos .subtitulo {
+    padding: 0.5rem;
+}
+
+main .administracion-datos .subtitulo h2 {
+    font-size: 2rem;
+}
+
+main .administracion-datos .crear {
+    border: .2rem solid #004ab4;
+    width: 80%;
+    padding: 1rem;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+main .administracion-datos .crear-titulo {
+    padding: .5rem 0 1rem 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+main .administracion-datos .crear-seleccion select {
+    border-radius: .2rem;
+    border: solid .2rem #004ab4;
+    background-color: transparent;
+    padding: .2rem 1rem;
+    text-align: center;
+}
+
+main .administracion-datos .crear-seleccion select:focus {
+    border: solid .3rem #004ab4;
+    font-weight: bold;
+}
+
+main .administracion-datos .crear-seleccion select:hover {
+    cursor: pointer;
+}
+
+main .administracion-datos .crear-datos {
+    margin: 1rem;
+}
+
+main .administracion-datos .crear-datos form {
+    display: none;
+}
+
+main .administracion-datos .crear-datos form div {
+    margin: 0.5rem;
+}
+
+/*Main: Modificación de datos*/
+
+main .administracion-datos .modificar {
+    border: .2rem solid #004ab4;
+    width: 80%;
+    padding: 1rem;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+main .administracion-datos .modificar .modificar-seleccion {
+    margin-bottom: .5rem;
+}
+
+main .administracion-datos .modificar .modificar-sub-seleccion {
+    margin-bottom: .5rem;
+}
+
+main .administracion-datos .modificar .form-modificar {
+    margin-bottom: .5rem;
+}
+
+main .administracion-datos .modificar .modificar-titulo {
+    padding: .5rem 0 1rem 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+main .administracion-datos .modificar select {
+    border-radius: .2rem;
+    border: solid .2rem #004ab4;
+    background-color: transparent;
+    padding: .2rem 1rem;
+    text-align: center;
+}
+
+main .administracion-datos .modificar .form-modificar input[type="text"] {
+    border-radius: .2rem;
+    border: solid .2rem #004ab4;
+    background-color: transparent;
+    padding: .2rem 1rem .2rem .1rem;
+}
+
+main .administracion-datos .modificar .form-modificar input[type="text"]:hover {
+    border: solid .3rem #004ab4;
+}
+
+/*Main: Eliminación de datos*/
+
+main .administracion-datos .eliminar {
+    border: .2rem solid #004ab4;
+    width: 80%;
+    padding: 1rem;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+}
+
+main .administracion-datos .eliminar .eliminar-titulo {
+    padding: .5rem 0 1rem 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+main .administracion-datos .eliminar select {
+    border-radius: .2rem;
+    border: solid .2rem #004ab4;
+    background-color: transparent;
+    padding: .2rem 1rem;
+    text-align: center;
+}
+
+main .administracion-datos .eliminar input[type="number"] {
+    border-radius: .2rem;
+    border: solid .2rem #004ab4;
+    background-color: transparent;
+    padding: .2rem 1rem .2rem .1rem;
+}
+
+main .administracion-datos .eliminar input[type="number"]:hover {
+    border: solid .3rem #004ab4;
+}
+
+main .administracion-datos .eliminar .eliminar-seleccion {
+    margin-bottom: .5rem;
+}
+
+main .administracion-datos .eliminar .form-eliminar input[type="number"] {
+    margin-bottom: .5rem;
+}
