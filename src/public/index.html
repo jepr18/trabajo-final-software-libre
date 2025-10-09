@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>UAPA Smartphones</title>
-    <link rel="stylesheet" href="../../public/style.css">
-    <script src="../main.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js"></script>
 </head>
 <body>
 <header>
@@ -26,16 +26,22 @@
                 <option value="clientes">Clientes</option>
                 <option value="ventas">Ventas</option>
             </select>
+
+            <label for="buscar-sub-opciones">¿Algo específico que buscar?</label>
+            <select name="buscar-sub-opciones" id="buscar-sub-opciones">
+                <option value="placeholder">-</option>
+            </select>
         </div>
         <div class="buscar-barra">
             <search>
-                <form action="">
+                <form action="" method="get">
                     <label for="buscar-barra">Término a buscar</label>
-                    <input type="search" id="buscar-barra" name="buscar-barra" />
+                    <input type="search" id="buscar-barra" name="buscar-barra" required/>
                     <button type="submit">Buscar</button>
                 </form>
             </search>
         </div>
+        <div id="resultados-busqueda"></div>
     </section>
 
     <section class="administracion-datos">
