@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>UAPA Smartphones</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/main.js"></script>
 </head>
 <body>
 <header>
@@ -112,36 +112,36 @@
                     </div>
                 </form>
 
-                <form action="" method="get" class="form-crear-ventas">
+                <form action="" method="get" class="form-crear-ventas" style="flex-direction: column; align-items: center;">
                     <div class="form-crear-ventas">
                         <label for="id-cliente-venta">ID Cliente: </label>
                         <input type="number" name="id-cliente-venta" id="id-cliente-venta" required />
                     </div>
-                    <div class="form-crear-ventas">
-                        <label for="fecha-venta">Fecha Venta: </label>
-                        <input type="date" name="fecha-venta" id="fecha-venta" required />
-                    </div>
-                    <div class="form-crear-ventas">
-                        <label for="total-venta">Total Venta: </label>
-                        <input type="number" name="total-venta" id="total-venta" required />
-                    </div>
-                    <div class="form-crear-ventas">
-                        <label for="id-producto">ID Producto: </label>
-                        <input type="number" name="id-producto" id="id-producto" required />
-                    </div>
-                    <div class="form-crear-ventas">
-                        <label for="cantidad-venta">Cantidad: </label>
-                        <input type="number" name="cantidad-venta" id="cantidad-venta" required />
-                    </div>
-                    <div class="form-crear-ventas">
-                        <label for="precio-unidad-venta">Precio Unidad: </label>
-                        <input type="number" name="precio-unidad-venta" id="precio-unidad-venta" required />
+                    <div class="form-crear-ventas-productos">
+                        <h3 style="text-align: left">Productos</h3>
+
+                        <div class="form-crear-ventas">
+                            <label for="id-producto">ID Producto: </label>
+                            <input type="number" name="id-producto" id="id-producto" required />
+                        </div>
+                        <div class="form-crear-ventas">
+                            <label for="cantidad-venta">Cantidad: </label>
+                            <input type="number" name="cantidad-venta" id="cantidad-venta" required />
+                        </div>
+                        <div class="anadir-mas-productos">
+                            <button name="add">
+                                <svg fill="black" viewBox="0 0 42 42" style="width: 20px; height: 20px;">
+                                    <path d="M19,8 L23,8 L23,19 L34,19 L34,23 L23,23 L23,34 L19,34 L19,23 L8,23 L8,19 L19,19 Z"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     <div class="form-crear-clientes">
                         <input type="submit" value="Insertar nueva venta" />
                     </div>
                 </form>
             </div>
+            <div id="resultados-crear"></div>
         </section>
 
         <section class="modificar">
@@ -164,6 +164,10 @@
             <div class="form-modificar">
                 <form action="" method="get" class="form-modificar">
                     <div class="form-modificar">
+                        <label for="form-modificar-id">ID: </label>
+                        <input type="text" name="form-modificar" id="form-modificar-id" required />
+                    </div>
+                    <div class="form-modificar">
                         <label for="form-modificar">Nuevo valor: </label>
                         <input type="text" name="form-modificar" id="form-modificar" required />
                     </div>
@@ -172,6 +176,7 @@
                     </div>
                 </form>
             </div>
+            <div id="resultados-modificar"></div>
         </section>
 
         <section class="eliminar">
@@ -195,6 +200,8 @@
                     </div>
                 </form>
             </div>
+            <div id="eliminar-preview"></div>
+            <div id="resultados-eliminar"></div>
         </section>
     </section>
 </main>
