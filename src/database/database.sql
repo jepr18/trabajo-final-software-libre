@@ -1,13 +1,11 @@
-CREATE DATABASE IF NOT EXISTS UapaSmartphones;
+﻿CREATE DATABASE IF NOT EXISTS UapaSmartphones;
 
-CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
-GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
+USE UapaSmartphones;
 
 CREATE TABLE IF NOT EXISTS Productos (
     IDProducto INT PRIMARY KEY AUTO_INCREMENT,
-    NombreModelo NVARCHAR(100) NOT NULL,
-    Marca NVARCHAR(50) NOT NULL,
+    NombreModelo VARCHAR(100) NOT NULL,
+    Marca VARCHAR(50) NOT NULL,
     Costo DECIMAL(9,2) NOT NULL,
     Precio DECIMAL(9,2) NOT NULL,
     CantidadEnStock INT NOT NULL DEFAULT 0,
@@ -16,10 +14,10 @@ CREATE TABLE IF NOT EXISTS Productos (
 
 CREATE TABLE IF NOT EXISTS Clientes (
     IDCliente INT PRIMARY KEY AUTO_INCREMENT,
-    Nombre NVARCHAR(50) NOT NULL,
-    Apellido NVARCHAR(50) NOT NULL,
-    CorreoElectrionico NVARCHAR(100),
-    Telefono NVARCHAR(20)
+    Nombre VARCHAR(50) NOT NULL,
+    Apellido VARCHAR(50) NOT NULL,
+    CorreoElectrionico VARCHAR(100),
+    Telefono VARCHAR(20)
 );
 
 CREATE TABLE IF NOT EXISTS Ventas (
@@ -63,20 +61,20 @@ INSERT INTO Productos (NombreModelo, Marca, Costo, Precio, CantidadEnStock, Fech
 ('Echo Dot 5ta Gen', 'Amazon', 30.00, 49.00, 60, '2023-12-05');
 
 INSERT INTO Clientes (Nombre, Apellido, CorreoElectrionico, Telefono) VALUES
-('Juan', 'Pérez', 'juan.perez@email.com', '809-555-0101'),
-('María', 'García', 'maria.garcia@email.com', '809-555-0102'),
-('Carlos', 'Rodríguez', 'carlos.rodriguez@email.com', '809-555-0103'),
-('Ana', 'Martínez', 'ana.martinez@email.com', '809-555-0104'),
-('Luis', 'Hernández', 'luis.hernandez@email.com', '809-555-0105'),
-('Carmen', 'López', 'carmen.lopez@email.com', '809-555-0106'),
-('Pedro', 'González', 'pedro.gonzalez@email.com', '809-555-0107'),
-('Laura', 'Sánchez', 'laura.sanchez@email.com', '809-555-0108'),
-('Miguel', 'Ramírez', 'miguel.ramirez@email.com', '809-555-0109'),
+('Juan', 'Perez', 'juan.perez@email.com', '809-555-0101'),
+('Maria', 'Garcia', 'maria.garcia@email.com', '809-555-0102'),
+('Carlos', 'Rodriguez', 'carlos.rodriguez@email.com', '809-555-0103'),
+('Ana', 'Martinez', 'ana.martinez@email.com', '809-555-0104'),
+('Luis', 'Hernandez', 'luis.hernandez@email.com', '809-555-0105'),
+('Carmen', 'Lopez', 'carmen.lopez@email.com', '809-555-0106'),
+('Pedro', 'Gonzalez', 'pedro.gonzalez@email.com', '809-555-0107'),
+('Laura', 'Sanchez', 'laura.sanchez@email.com', '809-555-0108'),
+('Miguel', 'Ramirez', 'miguel.ramirez@email.com', '809-555-0109'),
 ('Isabel', 'Torres', 'isabel.torres@email.com', '809-555-0110'),
 ('Roberto', 'Flores', 'roberto.flores@email.com', '809-555-0111'),
 ('Patricia', 'Rivera', 'patricia.rivera@email.com', '809-555-0112'),
-('Jorge', 'Gómez', 'jorge.gomez@email.com', '809-555-0113'),
-('Sofía', 'Díaz', 'sofia.diaz@email.com', '809-555-0114'),
+('Jorge', 'Gomez', 'jorge.gomez@email.com', '809-555-0113'),
+('Sofia', 'Diaz', 'sofia.diaz@email.com', '809-555-0114'),
 ('Fernando', 'Morales', 'fernando.morales@email.com', '809-555-0115');
 
 INSERT INTO Ventas (IDCliente, FechaVenta, TotalVenta) VALUES
@@ -125,104 +123,142 @@ INSERT INTO DetalleVentas (IDVenta, IDProducto, Cantidad, PrecioUnidad) VALUES
 (14, 13, 1, 999.00),
 (15, 1, 1, 1299.00);
 
+DROP PROCEDURE IF EXISTS spBusquedaProductos;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spBusquedaProductos (
+CREATE PROCEDURE spBusquedaProductos (
     IN p_idProducto INT,
-    IN p_nombreModelo NVARCHAR(100),
-    IN p_marca NVARCHAR(50)
+    IN p_nombreModelo VARCHAR(100),
+    IN p_marca VARCHAR(50)
 )
 BEGIN
     SELECT * FROM Productos
-        WHERE
-            (p_idProducto IS NULL OR IDProducto = p_idProducto) AND
-            (p_nombreModelo IS NULL OR NombreModelo COLLATE utf8mb4_0900_ai_ci LIKE CONCAT('%', p_nombreModelo, '%')) AND
-            (p_marca IS NULL OR Marca = p_marca);
+    WHERE
+        (p_idProducto IS NULL OR IDProducto = p_idProducto)
+        AND (p_nombreModelo IS NULL OR NombreModelo COLLATE utf8mb4_0900_ai_ci LIKE CONCAT('%', p_nombreModelo, '%'))
+        AND (p_marca IS NULL OR Marca = p_marca);
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spBusquedaClientes;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spBusquedaClientes (
+CREATE PROCEDURE spBusquedaClientes (
     IN p_idCliente INT,
-    IN p_nombre NVARCHAR(100),
-    IN p_apellido NVARCHAR(50),
+    IN p_nombre VARCHAR(100),
+    IN p_apellido VARCHAR(50),
     IN p_correoElectronico VARCHAR(100),
     IN p_telefono VARCHAR(20)
 )
 BEGIN
     SELECT * FROM Clientes
-        WHERE
-            (p_idCliente IS NULL OR IDCliente = p_idCliente) AND
-            (p_nombre IS NULL OR Nombre COLLATE utf8mb4_0900_ai_ci LIKE CONCAT('%', p_nombre, '%')) AND
-            (p_apellido IS NULL OR Apellido COLLATE utf8mb4_0900_ai_ci LIKE CONCAT('%', p_apellido, '%')) AND
-            (p_correoElectronico IS NULL OR CorreoElectrionico COLLATE utf8mb4_0900_ai_ci LIKE CONCAT('%', p_correoElectronico, '%')) AND
-            (p_telefono IS NULL OR Telefono = p_telefono);
+    WHERE
+        (p_idCliente IS NULL OR IDCliente = p_idCliente)
+        AND (p_nombre IS NULL OR Nombre COLLATE utf8mb4_0900_ai_ci LIKE CONCAT('%', p_nombre, '%'))
+        AND (p_apellido IS NULL OR Apellido COLLATE utf8mb4_0900_ai_ci LIKE CONCAT('%', p_apellido, '%'))
+        AND (p_correoElectronico IS NULL OR CorreoElectrionico COLLATE utf8mb4_0900_ai_ci LIKE CONCAT('%', p_correoElectronico, '%'))
+        AND (p_telefono IS NULL OR Telefono = p_telefono);
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spBusquedaTodosLosClientes;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spBusquedaVentas (
-    IN p_idVenta INT,
-    IN p_idCliente NVARCHAR(100),
-    IN p_fechaVenta NVARCHAR(50),
-    IN p_totalVenta VARCHAR(100),
-    IN p_idProducto VARCHAR(20)
-)
-BEGIN
-    SELECT Ventas.IDVenta, Ventas.IDCliente, CONCAT(Nombre, ' ', Apellido) AS NombreCliente, FechaVenta, DV.IDDetalleVentas, DV.IDProducto, P.NombreModelo, Cantidad, PrecioUnidad, TotalVenta FROM Ventas
-             LEFT JOIN DetalleVentas DV on Ventas.IDVenta = DV.IDVenta
-            LEFT JOIN Clientes C on Ventas.IDCliente = C.IDCliente
-            LEFT JOIN Productos P on DV.IDProducto = P.IDProducto
-        WHERE
-            (p_idVenta IS NULL OR Ventas.IDVenta = p_idVenta) AND
-            (p_idCliente IS NULL OR Ventas.IDCliente = p_idCliente) AND
-            (p_fechaVenta IS NULL OR FechaVenta = p_fechaVenta) AND
-            (p_totalVenta IS NULL OR TotalVenta = p_totalVenta) AND
-            (p_idProducto IS NULL OR DV.IDProducto = p_idProducto);
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spBusquedaTodosLosProductos()
-BEGIN
-    SELECT * FROM Productos
-    ORDER BY IDProducto;
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spBusquedaProductosPorId (
-    IN p_idProducto INT
-)
-BEGIN
-    SELECT * FROM Productos
-        WHERE
-            (p_idProducto IS NULL OR IDProducto = p_idProducto);
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spBusquedaTodosLosClientes()
+CREATE PROCEDURE spBusquedaTodosLosClientes()
 BEGIN
     SELECT * FROM Clientes
     ORDER BY IDCliente;
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spInsertarCliente;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spBusquedaTodosLasVentas()
+CREATE PROCEDURE spInsertarCliente (
+    IN p_nombre VARCHAR(50),
+    IN p_apellido VARCHAR(50),
+    IN p_correoElectronico VARCHAR(100),
+    IN p_telefono VARCHAR(20)
+)
 BEGIN
-    SELECT Ventas.IDVenta, Ventas.IDCliente, CONCAT(Nombre, ' ', Apellido) AS NombreCliente, FechaVenta, DV.IDProducto, P.NombreModelo, Cantidad, PrecioUnidad, TotalVenta FROM Ventas
-             LEFT JOIN DetalleVentas DV on Ventas.IDVenta = DV.IDVenta
-            LEFT JOIN Clientes C on Ventas.IDCliente = C.IDCliente
-            LEFT JOIN Productos P on DV.IDProducto = P.IDProducto
-    ORDER BY Ventas.IDVenta;
+    INSERT INTO Clientes (Nombre, Apellido, CorreoElectrionico, Telefono)
+    VALUES (p_nombre, p_apellido, p_correoElectronico, p_telefono);
+    SELECT LAST_INSERT_ID() AS IDCliente;
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spModificarCliente;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spInsertarProducto (
-    IN p_nombreModelo NVARCHAR(100),
-    IN p_marca NVARCHAR(50),
+CREATE PROCEDURE spModificarCliente (
+    IN p_idCliente INT,
+    IN p_nombre VARCHAR(50),
+    IN p_apellido VARCHAR(50),
+    IN p_correoElectronico VARCHAR(100),
+    IN p_telefono VARCHAR(20)
+)
+BEGIN
+    UPDATE Clientes
+    SET
+        Nombre = COALESCE(p_nombre, Nombre),
+        Apellido = COALESCE(p_apellido, Apellido),
+        CorreoElectrionico = COALESCE(p_correoElectronico, CorreoElectrionico),
+        Telefono = COALESCE(p_telefono, Telefono)
+    WHERE IDCliente = p_idCliente;
+    SELECT ROW_COUNT() AS FilasAfectadas;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS spEliminarCliente;
+DELIMITER //
+CREATE PROCEDURE spEliminarCliente (
+    IN p_idCliente INT
+)
+BEGIN
+    DELETE FROM Clientes
+    WHERE IDCliente = p_idCliente;
+    SELECT ROW_COUNT() AS FilasAfectadas;
+END //
+DELIMITER ;
+
+
+
+DROP PROCEDURE IF EXISTS spBusquedaProductos;
+DELIMITER //
+CREATE PROCEDURE spBusquedaProductos (
+    IN p_idProducto INT,
+    IN p_nombreModelo VARCHAR(100),
+    IN p_marca VARCHAR(50)
+)
+BEGIN
+    SELECT * FROM Productos
+    WHERE
+        (p_idProducto IS NULL OR IDProducto = p_idProducto)
+        AND (p_nombreModelo IS NULL OR NombreModelo COLLATE utf8mb4_0900_ai_ci LIKE CONCAT('%', p_nombreModelo, '%'))
+        AND (p_marca IS NULL OR Marca = p_marca);
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS spBusquedaTodosLosProductos;
+DELIMITER //
+CREATE PROCEDURE spBusquedaTodosLosProductos()
+BEGIN
+    SELECT * FROM Productos
+    ORDER BY IDProducto;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS spBusquedaProductosPorId;
+DELIMITER //
+CREATE PROCEDURE spBusquedaProductosPorId (
+    IN p_idProducto INT
+)
+BEGIN
+    SELECT * FROM Productos
+    WHERE (p_idProducto IS NULL OR IDProducto = p_idProducto);
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS spInsertarProducto;
+DELIMITER //
+CREATE PROCEDURE spInsertarProducto (
+    IN p_nombreModelo VARCHAR(100),
+    IN p_marca VARCHAR(50),
     IN p_costo DECIMAL(9,2),
     IN p_precio DECIMAL(9,2),
     IN p_cantidadEnStock INT,
@@ -231,16 +267,16 @@ CREATE PROCEDURE IF NOT EXISTS spInsertarProducto (
 BEGIN
     INSERT INTO Productos (NombreModelo, Marca, Costo, Precio, CantidadEnStock, FechaDisponible)
     VALUES (p_nombreModelo, p_marca, p_costo, p_precio, p_cantidadEnStock, p_fechaDisponible);
-
     SELECT LAST_INSERT_ID() AS IDProducto;
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spModificarProducto;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spModificarProducto (
+CREATE PROCEDURE spModificarProducto (
     IN p_idProducto INT,
-    IN p_nombreModelo NVARCHAR(100),
-    IN p_marca NVARCHAR(50),
+    IN p_nombreModelo VARCHAR(100),
+    IN p_marca VARCHAR(50),
     IN p_costo DECIMAL(9,2),
     IN p_precio DECIMAL(9,2),
     IN p_cantidadEnStock INT,
@@ -256,86 +292,77 @@ BEGIN
         CantidadEnStock = COALESCE(p_cantidadEnStock, CantidadEnStock),
         FechaDisponible = COALESCE(p_fechaDisponible, FechaDisponible)
     WHERE IDProducto = p_idProducto;
-
     SELECT ROW_COUNT() AS FilasAfectadas;
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spEliminarProducto;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spEliminarProducto (
+CREATE PROCEDURE spEliminarProducto (
     IN p_idProducto INT
 )
 BEGIN
     DELETE FROM Productos
     WHERE IDProducto = p_idProducto;
-
     SELECT ROW_COUNT() AS FilasAfectadas;
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spBusquedaVentas;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spInsertarCliente (
-    IN p_nombre NVARCHAR(50),
-    IN p_apellido NVARCHAR(50),
-    IN p_correoElectronico NVARCHAR(100),
-    IN p_telefono NVARCHAR(20)
+CREATE PROCEDURE spBusquedaVentas (
+    IN p_idVenta INT,
+    IN p_idCliente VARCHAR(100),
+    IN p_fechaVenta VARCHAR(50),
+    IN p_totalVenta VARCHAR(100),
+    IN p_idProducto VARCHAR(20)
 )
 BEGIN
-    INSERT INTO Clientes (Nombre, Apellido, CorreoElectrionico, Telefono)
-    VALUES (p_nombre, p_apellido, p_correoElectronico, p_telefono);
-
-    SELECT LAST_INSERT_ID() AS IDCliente;
+    SELECT Ventas.IDVenta, Ventas.IDCliente, CONCAT(Nombre, ' ', Apellido) AS NombreCliente, FechaVenta,
+           DV.IDDetalleVentas, DV.IDProducto, P.NombreModelo, Cantidad, PrecioUnidad, TotalVenta
+    FROM Ventas
+         LEFT JOIN DetalleVentas DV ON Ventas.IDVenta = DV.IDVenta
+         LEFT JOIN Clientes C ON Ventas.IDCliente = C.IDCliente
+         LEFT JOIN Productos P ON DV.IDProducto = P.IDProducto
+    WHERE
+        (p_idVenta IS NULL OR Ventas.IDVenta = p_idVenta)
+        AND (p_idCliente IS NULL OR Ventas.IDCliente = p_idCliente)
+        AND (p_fechaVenta IS NULL OR FechaVenta = p_fechaVenta)
+        AND (p_totalVenta IS NULL OR TotalVenta = p_totalVenta)
+        AND (p_idProducto IS NULL OR DV.IDProducto = p_idProducto);
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spBusquedaTodosLasVentas;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spModificarCliente (
-    IN p_idCliente INT,
-    IN p_nombre NVARCHAR(50),
-    IN p_apellido NVARCHAR(50),
-    IN p_correoElectronico NVARCHAR(100),
-    IN p_telefono NVARCHAR(20)
-)
+CREATE PROCEDURE spBusquedaTodosLasVentas()
 BEGIN
-    UPDATE Clientes
-    SET
-        Nombre = COALESCE(p_nombre, Nombre),
-        Apellido = COALESCE(p_apellido, Apellido),
-        CorreoElectrionico = COALESCE(p_correoElectronico, CorreoElectrionico),
-        Telefono = COALESCE(p_telefono, Telefono)
-    WHERE IDCliente = p_idCliente;
-
-    SELECT ROW_COUNT() AS FilasAfectadas;
+    SELECT Ventas.IDVenta, Ventas.IDCliente, CONCAT(Nombre, ' ', Apellido) AS NombreCliente, FechaVenta,
+           DV.IDProducto, P.NombreModelo, Cantidad, PrecioUnidad, TotalVenta
+    FROM Ventas
+         LEFT JOIN DetalleVentas DV ON Ventas.IDVenta = DV.IDVenta
+         LEFT JOIN Clientes C ON Ventas.IDCliente = C.IDCliente
+         LEFT JOIN Productos P ON DV.IDProducto = P.IDProducto
+    ORDER BY Ventas.IDVenta;
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spInsertarVenta;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spEliminarCliente (
-    IN p_idCliente INT
-)
-BEGIN
-    DELETE FROM Clientes
-    WHERE IDCliente = p_idCliente;
-
-    SELECT ROW_COUNT() AS FilasAfectadas;
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spInsertarVenta (
+CREATE PROCEDURE spInsertarVenta (
     IN p_idCliente INT,
     IN p_totalVenta DECIMAL(9,2)
 )
 BEGIN
     INSERT INTO Ventas (IDCliente, TotalVenta)
     VALUES (p_idCliente, p_totalVenta);
-
     SELECT LAST_INSERT_ID() AS IDVenta;
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spModificarVenta;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spModificarVenta (
+CREATE PROCEDURE spModificarVenta (
     IN p_idVenta INT,
     IN p_idCliente INT,
     IN p_fechaVenta DATETIME,
@@ -348,30 +375,26 @@ BEGIN
         FechaVenta = COALESCE(p_fechaVenta, FechaVenta),
         TotalVenta = COALESCE(p_totalVenta, TotalVenta)
     WHERE IDVenta = p_idVenta;
-
     SELECT ROW_COUNT() AS FilasAfectadas;
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spEliminarVenta;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spEliminarVenta (
+CREATE PROCEDURE spEliminarVenta (
     IN p_idVenta INT
 )
 BEGIN
-    -- Primero eliminar los detalles
-    DELETE FROM DetalleVentas
-    WHERE IDVenta = p_idVenta;
-
-    -- Luego eliminar la venta
-    DELETE FROM Ventas
-    WHERE IDVenta = p_idVenta;
-
+    DELETE FROM DetalleVentas WHERE IDVenta = p_idVenta;
+    DELETE FROM Ventas WHERE IDVenta = p_idVenta;
     SELECT ROW_COUNT() AS FilasAfectadas;
 END //
 DELIMITER ;
 
+
+DROP PROCEDURE IF EXISTS spInsertarDetalleVenta;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spInsertarDetalleVenta (
+CREATE PROCEDURE spInsertarDetalleVenta (
     IN p_idVenta INT,
     IN p_idProducto INT,
     IN p_cantidad INT,
@@ -381,7 +404,6 @@ BEGIN
     INSERT INTO DetalleVentas (IDVenta, IDProducto, Cantidad, PrecioUnidad)
     VALUES (p_idVenta, p_idProducto, p_cantidad, p_precioUnidad);
 
-    -- Actualizar el stock del producto
     UPDATE Productos
     SET CantidadEnStock = CantidadEnStock - p_cantidad
     WHERE IDProducto = p_idProducto;
@@ -390,8 +412,9 @@ BEGIN
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spModificarDetalleVenta;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spModificarDetalleVenta (
+CREATE PROCEDURE spModificarDetalleVenta (
     IN p_idDetalleVentas INT,
     IN p_idVenta INT,
     IN p_idProducto INT,
@@ -404,29 +427,23 @@ BEGIN
     DECLARE v_idProductoNuevo INT;
     DECLARE v_cantidadNueva INT;
 
-    -- Obtener valores actuales
     SELECT Cantidad, IDProducto INTO v_cantidadAnterior, v_idProductoAnterior
     FROM DetalleVentas
     WHERE IDDetalleVentas = p_idDetalleVentas;
 
-    -- Determinar el producto y cantidad final
     SET v_idProductoNuevo = COALESCE(p_idProducto, v_idProductoAnterior);
     SET v_cantidadNueva = COALESCE(p_cantidad, v_cantidadAnterior);
 
-    -- Si cambió el producto o la cantidad, ajustar el stock
     IF v_idProductoNuevo != v_idProductoAnterior OR v_cantidadNueva != v_cantidadAnterior THEN
-        -- Restaurar stock del producto anterior
         UPDATE Productos
         SET CantidadEnStock = CantidadEnStock + v_cantidadAnterior
         WHERE IDProducto = v_idProductoAnterior;
 
-        -- Descontar stock del producto nuevo
         UPDATE Productos
         SET CantidadEnStock = CantidadEnStock - v_cantidadNueva
         WHERE IDProducto = v_idProductoNuevo;
     END IF;
 
-    -- Actualizar el detalle
     UPDATE DetalleVentas
     SET
         IDVenta = COALESCE(p_idVenta, IDVenta),
@@ -439,12 +456,12 @@ BEGIN
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS spEliminarDetalleVenta;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS spEliminarDetalleVenta (
+CREATE PROCEDURE spEliminarDetalleVenta (
     IN p_idDetalleVentas INT
 )
 BEGIN
-    -- Obtener información del detalle para restaurar el stock
     DECLARE v_cantidad INT;
     DECLARE v_idProducto INT;
 
@@ -452,15 +469,19 @@ BEGIN
     FROM DetalleVentas
     WHERE IDDetalleVentas = p_idDetalleVentas;
 
-    -- Restaurar el stock
     UPDATE Productos
     SET CantidadEnStock = CantidadEnStock + v_cantidad
     WHERE IDProducto = v_idProducto;
 
-    -- Eliminar el detalle
     DELETE FROM DetalleVentas
     WHERE IDDetalleVentas = p_idDetalleVentas;
 
     SELECT ROW_COUNT() AS FilasAfectadas;
 END //
 DELIMITER ;
+
+ALTER DATABASE UapaSmartphones CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+ALTER TABLE Productos CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+ALTER TABLE Clientes  CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+ALTER TABLE Ventas    CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+ALTER TABLE DetalleVentas CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
