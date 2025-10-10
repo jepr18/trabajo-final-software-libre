@@ -1,26 +1,36 @@
 {
   "name": "uapa-smartphones-api",
   "version": "1.0.0",
-  "description": "UAPA Smartphones API with Node.js and MySQL",
-  "main": "server.js",
+  "description": "UAPA Smartphones API with Node.js and MySQL - Proyecto Final Software Libre",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest --verbose --coverage",
+    "test:functional": "jest tests/functional.test.js --verbose",
+    "test:performance": "node tests/performance.test.js",
+    "setup:db": "node scripts/setup-database.js",
+    "check": "node scripts/check-setup.js"
   },
   "keywords": [
     "api",
     "mysql",
-    "express"
+    "express",
+    "crud",
+    "smartphones"
   ],
-  "author": "",
+  "author": "Equipo UAPA Software Libre",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "mysql2": "^3.6.5"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2"
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2",
+    "supertest": "^6.3.3"
   }
 }
