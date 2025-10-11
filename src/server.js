@@ -1,4 +1,6 @@
 // server.js
+require('dotenv').config();
+
 const express = require('express');
 const mysql = require('mysql2/promise');
 const path = require('path');
@@ -13,9 +15,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // MySQL Connection Pool
 const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
+    host: process.env.DB_HOST || '127.0.0.1',
+    port: parseInt(process.env.DB_PORT) || 3306,
     user: process.env.DB_USER || 'admin',
-    password: process.env.DB_PASSWORD || 'admin',
+    password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'UapaSmartphones',
     waitForConnections: true,
     connectionLimit: 10,
