@@ -108,29 +108,95 @@ print_message "✅ Dependencias instaladas\n" "$GREEN"
 # 8. Configurar variables de entorno
 print_message "⚙️  Configurando variables de entorno..." "$BLUE"
 if [ ! -f ".env" ]; then
-    cp .env.example .env
-    print_message "⚠️  Edita el archivo .env con tus credenciales de MySQL" "$YELLOW"
-    print_message "   Presiona Enter cuando hayas editado .env..." "$YELLOW"
-    read
+    if [ -f ".env.example" ]; then
+        cp .env.example .env
+    else
+        # Crear .env con valores seguros por defecto
+        cat > .env << 'ENVEOF'
+# Server Configuration
+PORT=3000
+NODE_ENV=production
+
+# Database Configuration (USAR 127.0.0.1 para forzar IPv4)
+DB_HOST=127.0.0.1
+DB_USER=root
+DB_PASSWORD=CAMBIAR_ESTE_PASSWORD
+DB_NAME=UapaSmartphones
+DB_PORT=3306
+
+# Application Configuration
+APP_NAME=UAPA Smartphones API
+APP_VERSION=1.0.0
+
+# CORS Configuration
+CORS_ORIGIN=*
+
+# Logging
+LOG_LEVEL=info
+ENVEOF
+    fi
+    
+    print_message "⚠️  IMPORTANTE: Edita .env con tu contraseña de MySQL" "$YELLOW"
+    print_message "   Archivo: $APP_DIR/.env" "$YELLOW"
+    print_message "   Cambia: DB_PASSWORD=CAMBIAR_ESTE_PASSWORD" "$YELLOW"
+    echo ""
+    read -sp "   Ingresa la contraseña de MySQL root: " MYSQL_PASSWORD
+    echo
+    sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=$MYSQL_PASSWORD/" .env
+    print_message "   ✓ Contraseña configurada" "$GREEN"
 fi
 print_message "✅ Variables de entorno configuradas\n" "$GREEN"
 
 # 9. Configurar MySQL
 print_message "🔧 Configurando base de datos..." "$BLUE"
-print_message "⚠️  Ejecutando script de inicialización de BD..." "$YELLOW"
-npm run setup:db
-check_error "Falló la configuración de la base de datos"
-print_message "✅ Base de datos configurada\n" "$GREEN"
 
-# 10. Configurar NGINX
+# Verificar que MySQL está corriendo
+if ! systemctl is-active --quiet mysql; then
+    print_message "⚠️  MySQL no está corriendo, iniciándolo..." "$YELLOW"
+    systemctl start mysql
+    sleep 3
+fi
+
+# Opción 1: Usar el script Node.js (recomendado)
+print_message "📊 Ejecutando script de inicialización de BD..." "$YELLOW"
+if npm run setup:db; then
+    print_message "✅ Base de datos configurada con npm\n" "$GREEN"
+else
+    print_message "⚠️  El script npm falló, intentando con mysql directo..." "$YELLOW"
+    
+    # Opción 2: Ejecutar SQL directamente (fallback)
+    read -sp "   Contraseña de MySQL root: " MYSQL_ROOT_PASSWORD
+    echo
+    
+    if [ -f "src/database/database.sql" ]; then
+        mysql -u root -p"$MYSQL_ROOT_PASSWORD" < src/database/database.sql 2>&1
+        if [ $? -eq 0 ]; then
+            print_message "✅ Base de datos configurada con mysql\n" "$GREEN"
+        else
+            print_message "❌ Error al configurar la base de datos" "$RED"
+            print_message "   Ejecuta manualmente: mysql -u root -p < src/database/database.sql" "$YELLOW"
+            exit 1
+        fi
+    else
+        print_message "❌ No se encontró src/database/database.sql" "$RED"
+        exit 1
+    fi
+fi
+
+# 10. Configurar NGINX (con corrección IPv4)
 print_message "🔧 Configurando NGINX..." "$BLUE"
 cat > /etc/nginx/sites-available/$APP_NAME << 'EOF'
 server {
     listen 80;
     server_name _;
 
-    location / {
-        proxy_pass http://localhost:3000;
+    # Ruta raíz de la aplicación
+    root /var/www/uapa-smartphones/src/public;
+    index index.html;
+
+    # Proxy para la API (FORZAR IPv4 con 127.0.0.1)
+    location /api {
+        proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -139,6 +205,22 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # Timeouts aumentados
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    # Servir archivos estáticos directamente
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Cache para recursos estáticos
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+        expires 1d;
+        add_header Cache-Control "public, immutable";
     }
 }
 EOF

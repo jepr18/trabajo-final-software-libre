@@ -33,6 +33,31 @@ UAPA Smartphones es una aplicación web completa que permite gestionar un invent
 - **Base de Datos**: MySQL con stored procedures
 - **Características**: CRUD completo, gestión de inventario, control de ventas
 
+---
+
+## 🚀 Inicio Rápido
+
+### ⚡ Despliegue Automatizado en VM Linux
+
+```bash
+# 1. Clonar y desplegar
+git clone https://github.com/jepr18/trabajo-final-software-libre
+cd trabajo-final-software-libre
+sudo chmod +x scripts/deploy.sh
+sudo ./scripts/deploy.sh
+
+# 2. Verificar
+sudo ./scripts/post-install-verify.sh
+
+# 3. Acceder: http://IP_DE_TU_VM
+```
+
+**📚 Guías disponibles:**
+- [DEPLOYMENT.md](DEPLOYMENT.md) - Guía completa de despliegue
+- [QUICK_START_CLEAN.md](QUICK_START_CLEAN.md) - Empezar desde cero
+
+---
+
 ### 🎓 Resultados de Aprendizaje (RA)
 
 Este proyecto cumple con los siguientes resultados de aprendizaje:
