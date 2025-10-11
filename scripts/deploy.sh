@@ -85,19 +85,42 @@ print_message "✅ NGINX instalado\n" "$GREEN"
 
 # 5. Crear directorio de aplicación
 print_message "📁 Configurando directorio de aplicación..." "$BLUE"
-mkdir -p $APP_DIR
-cd $APP_DIR
-print_message "✅ Directorio creado: $APP_DIR\n" "$GREEN"
 
-# 6. Clonar o copiar aplicación
-print_message "📥 Desplegando aplicación..." "$BLUE"
-if [ -d ".git" ]; then
+# Detectar desde dónde se está ejecutando el script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+
+# Si el script se ejecuta desde un directorio clonado, copiar desde ahí
+if [ -f "$PROJECT_ROOT/package.json" ] && [ -f "$PROJECT_ROOT/src/server.js" ]; then
+    print_message "📦 Detectado proyecto en: $PROJECT_ROOT" "$CYAN"
+    print_message "📥 Copiando archivos a $APP_DIR..." "$BLUE"
+    
+    # Crear directorio si no existe
+    mkdir -p $APP_DIR
+    
+    # Copiar todos los archivos del proyecto
+    cp -r "$PROJECT_ROOT"/* $APP_DIR/ 2>/dev/null || true
+    cp -r "$PROJECT_ROOT"/.env.example $APP_DIR/ 2>/dev/null || true
+    cp -r "$PROJECT_ROOT"/.gitignore $APP_DIR/ 2>/dev/null || true
+    cp -r "$PROJECT_ROOT"/.git $APP_DIR/ 2>/dev/null || true
+    
+    print_message "✅ Archivos copiados correctamente" "$GREEN"
+elif [ -d "$APP_DIR/.git" ]; then
+    print_message "📥 Actualizando repositorio existente..." "$BLUE"
+    cd $APP_DIR
     git pull
+    print_message "✅ Repositorio actualizado" "$GREEN"
 else
-    print_message "⚠️  Copia los archivos de la aplicación a $APP_DIR" "$YELLOW"
-    print_message "   Presiona Enter cuando hayas copiado los archivos..." "$YELLOW"
-    read
+    print_message "⚠️  No se detectó un repositorio clonado" "$YELLOW"
+    print_message "   Opciones:" "$YELLOW"
+    echo "   1. Ejecuta este script desde el directorio del proyecto clonado"
+    echo "   2. O clona manualmente en $APP_DIR:"
+    echo "      git clone https://github.com/Pav-gm/trabajo-final-software-libre $APP_DIR"
+    exit 1
 fi
+
+cd $APP_DIR
+print_message "✅ Directorio configurado: $APP_DIR\n" "$GREEN"
 
 # 7. Instalar dependencias de Node.js
 print_message "📦 Instalando dependencias de Node.js..." "$BLUE"
