@@ -128,6 +128,27 @@ npm install
 check_error "Falló la instalación de dependencias"
 print_message "✅ Dependencias instaladas\n" "$GREEN"
 
+# 7.5 Asegurar que server.js carga dotenv (por si no está en el código)
+print_message "🔧 Verificando configuración de dotenv en server.js..." "$BLUE"
+if ! grep -q "require('dotenv').config()" src/server.js; then
+    print_message "   📝 Agregando require('dotenv').config() a server.js..." "$YELLOW"
+    sed -i '1irequire("dotenv").config();' src/server.js
+    print_message "   ✓ dotenv configurado" "$GREEN"
+else
+    print_message "   ✓ dotenv ya está configurado" "$GREEN"
+fi
+
+# Asegurar que el pool usa 127.0.0.1 como fallback
+print_message "🔧 Verificando configuración del pool MySQL..." "$BLUE"
+if grep -q "host: process.env.DB_HOST || 'localhost'" src/server.js; then
+    print_message "   📝 Corrigiendo fallback a 127.0.0.1..." "$YELLOW"
+    sed -i "s/host: process\.env\.DB_HOST || 'localhost'/host: process.env.DB_HOST || '127.0.0.1'/" src/server.js
+    print_message "   ✓ Pool configurado para IPv4" "$GREEN"
+else
+    print_message "   ✓ Pool ya está configurado correctamente" "$GREEN"
+fi
+print_message "✅ Configuración del servidor verificada\n" "$GREEN"
+
 # 8. Configurar variables de entorno
 print_message "⚙️  Configurando variables de entorno..." "$BLUE"
 
