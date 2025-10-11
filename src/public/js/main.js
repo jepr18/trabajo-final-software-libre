@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const fechaProducto = document.getElementById('fecha-disponible');
                 btnCrearProducto.addEventListener("click", (event) => {
                     event.preventDefault();
-                    enviarAPI('http://localhost:3000/api/nuevoProducto', {
+                    enviarAPI('/api/nuevoProducto', {
                         "nombreModelo": modeloProducto.value.trim(),
                         "marca": marcaProducto.value.trim(),
                         "costo": parseInt(costoProducto.value.trim()),
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 btnCrearCliente.addEventListener("click", (event) => {
                     event.preventDefault();
-                    enviarAPI('http://localhost:3000/api/nuevoCliente', {
+                    enviarAPI('/api/nuevoCliente', {
                         "nombre": nombreCliente.value.trim(),
                         "apellido": apellidoCliente.value.trim(),
                         "correoElectronico": correoCliente.value.trim(),
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Call your API
                     try {
-                        const response = await fetch('http://localhost:3000/api/nuevaVenta', {
+                        const response = await fetch('/api/nuevaVenta', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
         switch (seleccionBusqueda.value) {
             case "productos":
                 if (subSeleccionBusqueda.value === "id-producto") {
-                    enviarAPI('http://localhost:3000/api/buscarProductos', {
+                    enviarAPI('/api/buscarProductos', {
                         "idProducto": parseInt(barraBuscar.value.trim()),
                         "nombreModelo": null,
                         "marca": null
@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         estiloTabla();
                     });
                 } else if (subSeleccionBusqueda.value === "marca") {
-                    enviarAPI('http://localhost:3000/api/buscarProductos', {
+                    enviarAPI('/api/buscarProductos', {
                         "idProducto": null,
                         "nombreModelo": null,
                         "marca": barraBuscar.value.trim()
@@ -481,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         estiloTabla();
                     });
                 } else if (subSeleccionBusqueda.value === "nombre-modelo") {
-                    enviarAPI('http://localhost:3000/api/buscarProductos', {
+                    enviarAPI('/api/buscarProductos', {
                         "idProducto": null,
                         "nombreModelo": barraBuscar.value.trim(),
                         "marca": null
@@ -493,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         estiloTabla();
                     });
                 } else {
-                    fetch('http://localhost:3000/api/buscarTodosLosProductos').then(response => response.json()).then(data => {
+                    fetch('/api/buscarTodosLosProductos').then(response => response.json()).then(data => {
                         construirTabla('resultados-busqueda', data.data, {
                             claseTabla: 'resultados-tabla-productos',
                             headers: ['ID Producto', 'Nombre Modelo', 'Marca', 'Costo', 'Precio', 'Cantidad En Stock', 'Fecha Disponible']
@@ -504,7 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case "clientes":
                 if (subSeleccionBusqueda.value === "id-cliente") {
-                    enviarAPI('http://localhost:3000/api/buscarClientes', {
+                    enviarAPI('/api/buscarClientes', {
                         "idCliente": parseInt(barraBuscar.value.trim()),
                         "nombre": null,
                         "apellido": null,
@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         estiloTabla();
                     });
                 } else if (subSeleccionBusqueda.value === "nombre-cliente") {
-                    enviarAPI('http://localhost:3000/api/buscarClientes', {
+                    enviarAPI('/api/buscarClientes', {
                         "idCliente": null,
                         "nombre": barraBuscar.value.trim(),
                         "apellido": null,
@@ -532,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         estiloTabla();
                     });
                 } else if (subSeleccionBusqueda.value === "correo-cliente") {
-                    enviarAPI('http://localhost:3000/api/buscarClientes', {
+                    enviarAPI('/api/buscarClientes', {
                         "idCliente": null,
                         "nombre": null,
                         "apellido": null,
@@ -546,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         estiloTabla();
                     });
                 } else if (subSeleccionBusqueda.value === "apellido-cliente") {
-                    enviarAPI('http://localhost:3000/api/buscarClientes', {
+                    enviarAPI('/api/buscarClientes', {
                         "idCliente": null,
                         "nombre": null,
                         "apellido": barraBuscar.value.trim(),
@@ -560,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         estiloTabla();
                     });
                 } else if (subSeleccionBusqueda.value === "telefono-cliente") {
-                    enviarAPI('http://localhost:3000/api/buscarClientes', {
+                    enviarAPI('/api/buscarClientes', {
                         "idCliente": null,
                         "nombre": null,
                         "apellido": null,
@@ -574,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         estiloTabla();
                     });
                 } else {
-                    fetch('http://localhost:3000/api/buscarTodosLosClientes').then(response => response.json()).then(data => {
+                    fetch('/api/buscarTodosLosClientes').then(response => response.json()).then(data => {
                         construirTabla('resultados-busqueda', data.data, {
                             claseTabla: 'resultados-tabla-clientes',
                             headers: ['ID Cliente', 'Nombre', 'Apellido', 'Correo Electrónico', 'Teléfono']
@@ -585,7 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case "ventas":
                 if (subSeleccionBusqueda.value === "id-venta") {
-                    enviarAPI('http://localhost:3000/api/buscarVentas', {
+                    enviarAPI('/api/buscarVentas', {
                         "idVenta": parseInt(barraBuscar.value.trim()),
                         "idCliente": null,
                         "fechaVenta": null,
@@ -599,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         estiloTabla();
                     });
                 } else if (subSeleccionBusqueda.value === "id-cliente-venta") {
-                    enviarAPI('http://localhost:3000/api/buscarVentas', {
+                    enviarAPI('/api/buscarVentas', {
                         "idVenta": null,
                         "idCliente": parseInt(barraBuscar.value.trim()),
                         "fechaVenta": null,
@@ -613,7 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         estiloTabla();
                     });
                 } else if (subSeleccionBusqueda.value === "id-producto-venta") {
-                    enviarAPI('http://localhost:3000/api/buscarVentas', {
+                    enviarAPI('/api/buscarVentas', {
                         "idVenta": null,
                         "idCliente": null,
                         "fechaVenta": null,
@@ -627,7 +627,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         estiloTabla();
                     });
                 } else {
-                    fetch('http://localhost:3000/api/buscarTodasLasVentas').then(response => response.json()).then(data => {
+                    fetch('/api/buscarTodasLasVentas').then(response => response.json()).then(data => {
                         construirTabla('resultados-busqueda', data.data, {
                             claseTabla: 'resultados-tabla-ventas',
                             headers: ['ID Venta', 'ID Cliente', 'Nombre Cliente', 'Fecha Venta', 'ID Detalle de Venta', 'ID Producto', 'Nombre Producto', 'Cantidad', 'Precio Unidad', 'Total Venta']
