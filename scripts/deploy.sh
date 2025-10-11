@@ -236,9 +236,10 @@ if [ -f "src/database/database.sql" ]; then
     SQL_FILE="$(pwd)/src/database/database.sql"
     
     # Ejecutar usando SOURCE (soporta DELIMITER correctamente)
-    mysql -h 127.0.0.1 -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SOURCE $SQL_FILE" 2>&1 | tee /tmp/mysql-setup.log
+    mysql -h 127.0.0.1 -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SOURCE $SQL_FILE" > /tmp/mysql-setup.log 2>&1
+    MYSQL_EXIT_CODE=$?
     
-    if [ ${PIPESTATUS[0]} -eq 0 ]; then
+    if [ $MYSQL_EXIT_CODE -eq 0 ]; then
         print_message " Base de datos inicializada correctamente" "$GREEN"
         
         # Verificar que se crearon los datos
