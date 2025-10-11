@@ -130,20 +130,31 @@ print_message "✅ Dependencias instaladas\n" "$GREEN"
 
 # 8. Configurar variables de entorno
 print_message "⚙️  Configurando variables de entorno..." "$BLUE"
-if [ ! -f ".env" ]; then
-    if [ -f ".env.example" ]; then
-        cp .env.example .env
-    else
-        # Crear .env con valores seguros por defecto
-        cat > .env << 'ENVEOF'
+
+# Solicitar credenciales de MySQL
+echo ""
+print_message "📝 Configuración de MySQL:" "$CYAN"
+read -p "   Usuario de MySQL (default: admin): " MYSQL_USER
+MYSQL_USER=${MYSQL_USER:-admin}
+
+read -sp "   Contraseña de MySQL: " MYSQL_PASSWORD
+echo ""
+
+if [ -z "$MYSQL_PASSWORD" ]; then
+    print_message "❌ La contraseña no puede estar vacía" "$RED"
+    exit 1
+fi
+
+# Crear .env con las credenciales proporcionadas
+cat > .env << ENVEOF
 # Server Configuration
 PORT=3000
 NODE_ENV=production
 
 # Database Configuration (USAR 127.0.0.1 para forzar IPv4)
 DB_HOST=127.0.0.1
-DB_USER=root
-DB_PASSWORD=CAMBIAR_ESTE_PASSWORD
+DB_USER=$MYSQL_USER
+DB_PASSWORD=$MYSQL_PASSWORD
 DB_NAME=UapaSmartphones
 DB_PORT=3306
 
@@ -157,17 +168,7 @@ CORS_ORIGIN=*
 # Logging
 LOG_LEVEL=info
 ENVEOF
-    fi
-    
-    print_message "⚠️  IMPORTANTE: Edita .env con tu contraseña de MySQL" "$YELLOW"
-    print_message "   Archivo: $APP_DIR/.env" "$YELLOW"
-    print_message "   Cambia: DB_PASSWORD=CAMBIAR_ESTE_PASSWORD" "$YELLOW"
-    echo ""
-    read -sp "   Ingresa la contraseña de MySQL root: " MYSQL_PASSWORD
-    echo
-    sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=$MYSQL_PASSWORD/" .env
-    print_message "   ✓ Contraseña configurada" "$GREEN"
-fi
+
 print_message "✅ Variables de entorno configuradas\n" "$GREEN"
 
 # 9. Configurar MySQL
@@ -180,30 +181,58 @@ if ! systemctl is-active --quiet mysql; then
     sleep 3
 fi
 
-# Opción 1: Usar el script Node.js (recomendado)
-print_message "📊 Ejecutando script de inicialización de BD..." "$YELLOW"
-if npm run setup:db; then
-    print_message "✅ Base de datos configurada con npm\n" "$GREEN"
+print_message "✅ MySQL está corriendo" "$GREEN"
+
+# Crear usuario MySQL si no existe (usando root con sudo)
+print_message "👤 Verificando/creando usuario MySQL '$MYSQL_USER'..." "$BLUE"
+sudo mysql -e "
+CREATE USER IF NOT EXISTS '$MYSQL_USER'@'localhost' IDENTIFIED BY '$MYSQL_PASSWORD';
+GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'localhost';
+FLUSH PRIVILEGES;
+" 2>/dev/null || print_message "   ⚠️  Usuario ya existe o no se pudo crear (continuando...)" "$YELLOW"
+
+# Verificar conexión con las credenciales proporcionadas
+print_message "🔍 Verificando conexión a MySQL..." "$BLUE"
+if mysql -h 127.0.0.1 -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SELECT 1;" &>/dev/null; then
+    print_message "✅ Conexión exitosa con MySQL" "$GREEN"
 else
-    print_message "⚠️  El script npm falló, intentando con mysql directo..." "$YELLOW"
+    print_message "❌ No se pudo conectar a MySQL con las credenciales proporcionadas" "$RED"
+    print_message "   Usuario: $MYSQL_USER" "$YELLOW"
+    print_message "   Host: 127.0.0.1" "$YELLOW"
+    exit 1
+fi
+
+# Ejecutar SQL directamente (más confiable que npm run setup:db)
+print_message "📊 Inicializando base de datos..." "$BLUE"
+if [ -f "src/database/database.sql" ]; then
+    # Ejecutar el SQL con el usuario configurado
+    mysql -h 127.0.0.1 -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" < src/database/database.sql 2>&1 | tee /tmp/mysql-setup.log
     
-    # Opción 2: Ejecutar SQL directamente (fallback)
-    read -sp "   Contraseña de MySQL root: " MYSQL_ROOT_PASSWORD
-    echo
-    
-    if [ -f "src/database/database.sql" ]; then
-        mysql -u root -p"$MYSQL_ROOT_PASSWORD" < src/database/database.sql 2>&1
-        if [ $? -eq 0 ]; then
-            print_message "✅ Base de datos configurada con mysql\n" "$GREEN"
+    if [ ${PIPESTATUS[0]} -eq 0 ]; then
+        print_message "✅ Base de datos inicializada correctamente" "$GREEN"
+        
+        # Verificar que se crearon los datos
+        PRODUCT_COUNT=$(mysql -h 127.0.0.1 -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -sN -e "SELECT COUNT(*) FROM UapaSmartphones.productos;" 2>/dev/null || echo "0")
+        CLIENT_COUNT=$(mysql -h 127.0.0.1 -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -sN -e "SELECT COUNT(*) FROM UapaSmartphones.clientes;" 2>/dev/null || echo "0")
+        
+        print_message "   📦 Productos insertados: $PRODUCT_COUNT" "$CYAN"
+        print_message "   👥 Clientes insertados: $CLIENT_COUNT" "$CYAN"
+        
+        if [ "$PRODUCT_COUNT" -gt 0 ] && [ "$CLIENT_COUNT" -gt 0 ]; then
+            print_message "✅ Datos de prueba cargados correctamente\n" "$GREEN"
         else
-            print_message "❌ Error al configurar la base de datos" "$RED"
-            print_message "   Ejecuta manualmente: mysql -u root -p < src/database/database.sql" "$YELLOW"
-            exit 1
+            print_message "⚠️  Base de datos creada pero sin datos de prueba" "$YELLOW"
+            print_message "   Revisa /tmp/mysql-setup.log para más detalles\n" "$YELLOW"
         fi
     else
-        print_message "❌ No se encontró src/database/database.sql" "$RED"
+        print_message "❌ Error al inicializar la base de datos" "$RED"
+        print_message "   Revisa /tmp/mysql-setup.log para más detalles" "$YELLOW"
+        print_message "   O ejecuta manualmente: mysql -h 127.0.0.1 -u $MYSQL_USER -p < src/database/database.sql" "$YELLOW"
         exit 1
     fi
+else
+    print_message "❌ No se encontró src/database/database.sql" "$RED"
+    exit 1
 fi
 
 # 10. Configurar NGINX (con corrección IPv4)
